@@ -31,12 +31,6 @@ import com.example.vitaly.authapp2.Model.*;
 
 public class MainLoginActivity extends AppCompatActivity {
 
-//    private static final String[] CREDENTIALS = new String[]{
-//            "admin:1234:d0ecd2c7db75e999e256d0b396f995e1",
-//            "user:4321:e7096f6143aff9ceb073b14872b1659d",
-//            "sudo:1111:a7d134af6240efabcd1bf548c757a4a1"
-//    };
-
     private static final String SECRET_CREDS = "sudo:1111";
 
     private UserLoginTask mAuthTask = null;
@@ -49,7 +43,6 @@ public class MainLoginActivity extends AppCompatActivity {
     private ImageView outcomeAnimationPlaceHolder;
     private AnimationDrawable animation;
     private TelephonyManager tm;
-    //private GetHandler serverRequest;
     private SecretRequest request;
     private boolean getSensorResult = false;
     private int prev_val;
@@ -113,7 +106,6 @@ public class MainLoginActivity extends AppCompatActivity {
                     Log.d("EVENT", "+++HIDE+++ " + ++secret_number );
                 prev_val = (int) event.values[0];
             }
-
         }
     };
 
@@ -214,15 +206,22 @@ public class MainLoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            String res = null;
             String[] result = null;
 
             try {
                 if(request != null){
-                    result = request.doWork().split(":");
-                    if ( result != null) {
+                    res = request.doWork();
+                    if ( res != null) {
+                        result = res.split(":");
                         getSensorResult = true;
                         Thread.sleep(5000);
                         getSensorResult = false;
+
+                        if( result[0].equals(device_id) &&
+                                result[1].equals(mPassword) &&
+                                result[2].equals(secret_number + ""))
+                            return true;
                     } else {
                         throw new InterruptedException();
                     }
@@ -232,11 +231,6 @@ public class MainLoginActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 return false;
             }
-
-            if( result[0].equals(device_id) &&
-                result[1].equals(mPassword) &&
-                result[2].equals(secret_number + ""))
-                    return true;
             return false;
         }
 

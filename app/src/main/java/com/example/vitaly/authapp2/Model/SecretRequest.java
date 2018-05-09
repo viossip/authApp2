@@ -10,7 +10,7 @@ import okhttp3.Response;
 
 
 public class SecretRequest {
-    OkHttpClient client = new OkHttpClient();
+    OkHttpClient c = new OkHttpClient();
     String user, password, id;
 
     public SecretRequest(String user, String password, String id) {
@@ -23,22 +23,22 @@ public class SecretRequest {
 
         String url = "http://authapp2-authapp2.7e14.starter-us-west-2.openshiftapps.com/";
 
-        HttpUrl.Builder httpBuider = HttpUrl.parse(url).newBuilder();
+        HttpUrl.Builder hb = HttpUrl.parse(url).newBuilder();
 
-        httpBuider.addQueryParameter("id", id);
-        httpBuider.addQueryParameter("username", user);
-        httpBuider.addQueryParameter("password", password);
+        hb.addQueryParameter("id", id);
+        hb.addQueryParameter("username", user);
+        hb.addQueryParameter("password", password);
 
-        Request request = new Request.Builder().url(httpBuider.build()).build();
+        Request r = new Request.Builder().url(hb.build()).build();
 
-        Response response = null;
+        Response re = null;
         try {
-            response = client.newCall(request).execute();
-            if(response.code() == 200)
-                return response.body().string();
+            re = c.newCall(r).execute();
+            if(re.code() == 200)
+                return re.body().string();
 
         } catch (IOException e) {
-            Log.e("ERROR", "error in getting response get request with query string okhttp");
+            Log.e("ERROR", "Error in getting response");
         }
         return null;
     }
